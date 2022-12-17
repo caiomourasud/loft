@@ -11,8 +11,22 @@ class _VisitsPageState extends State<VisitsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Visits'),
+        toolbarHeight: 0.0,
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 22.0),
+            child: Text(
+              'Minhas visitas',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          )
+        ],
       ),
     );
   }
