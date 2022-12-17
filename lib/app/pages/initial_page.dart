@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:loft/app/models/bottom_navigation_bar_item_model.dart';
 import 'package:loft/app/pages/favorites/favorites_page.dart';
 import 'package:loft/app/pages/home/home_page.dart';
@@ -50,14 +51,15 @@ class _InitialPageState extends State<InitialPage> {
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
+          backgroundColor: Colors.white,
           items: items.map(
-        (item) {
-          return _customBottomNavigationBarItem(
-            iconData: item.iconData,
-            label: item.label,
-          );
-        },
-      ).toList()),
+            (item) {
+              return _customBottomNavigationBarItem(
+                iconData: item.iconData,
+                label: item.label,
+              );
+            },
+          ).toList()),
       tabBuilder: (context, index) {
         return tabs[index];
       },
