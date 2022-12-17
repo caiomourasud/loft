@@ -17,7 +17,7 @@ class LogoTabBar extends StatelessWidget {
           height: 32.0,
         ),
         if (showDropdown) ...[
-          const SizedBox(width: 16.0),
+          const SizedBox(width: 12.0),
           Text(
             'Sao Paulo',
             style: Theme.of(context).textTheme.titleMedium,

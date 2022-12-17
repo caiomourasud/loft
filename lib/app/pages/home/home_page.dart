@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: const [
+          SizedBox(height: 12.0),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 22.0),
             child: LogoTabBar(),

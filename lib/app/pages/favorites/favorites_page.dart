@@ -19,6 +19,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
       ),
       body: Column(
         children: [
+          const SizedBox(height: 12.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 22.0),
             child: Text(
