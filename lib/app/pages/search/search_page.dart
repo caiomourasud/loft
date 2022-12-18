@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:loft/app/components/logo_tab_bar.dart';
+import 'package:loft/app/pages/loft_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -9,24 +9,16 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  final list = List<String>.generate(100, (i) => 'Item ${i + 1}');
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        toolbarHeight: 0.0,
-        elevation: 0.0,
-        backgroundColor: Colors.white,
-      ),
-      body: Column(
-        children: const [
-          SizedBox(height: 12.0),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 22.0),
-            child: LogoTabBar(),
-          )
-        ],
-      ),
+    return LoftPage.noTitle(
+      children: list
+          .map((e) => ListTile(
+                title: Text(e),
+              ))
+          .toList(),
     );
   }
 }

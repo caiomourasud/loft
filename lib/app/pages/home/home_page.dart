@@ -1,32 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:loft/app/components/logo_tab_bar.dart';
+import 'package:loft/app/pages/loft_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({this.scrollController, super.key});
+
+  final ScrollController? scrollController;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final list = List<String>.generate(100, (i) => 'Item ${i + 1}');
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        toolbarHeight: 0.0,
-        elevation: 0.0,
-        backgroundColor: Colors.white,
-      ),
-      body: Column(
-        children: const [
-          SizedBox(height: 12.0),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 22.0),
-            child: LogoTabBar(),
-          )
-        ],
-      ),
+    return LoftPage.noTitle(
+      children: list
+          .map((e) => ListTile(
+                title: Text(e),
+              ))
+          .toList(),
     );
   }
 }

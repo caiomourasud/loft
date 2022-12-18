@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loft/app/themes/loft_theme.dart';
 
-class LogoTabBar extends StatelessWidget {
-  const LogoTabBar({this.showDropdown = true, super.key});
+class LoftAppBarContent extends StatelessWidget {
+  const LoftAppBarContent({this.showDropdown = true, super.key});
 
   final bool showDropdown;
 
@@ -20,8 +20,11 @@ class LogoTabBar extends StatelessWidget {
           const SizedBox(width: 12.0),
           Text(
             'Sao Paulo',
-            style: Theme.of(context).textTheme.titleMedium,
-          )
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const Icon(Icons.keyboard_arrow_down_rounded)
         ]
       ],
     );
