@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loft/app/components/loft_profile_section.dart';
 import 'package:loft/app/pages/loft_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -56,11 +57,55 @@ class _ProfilePageState extends State<ProfilePage> {
     return LoftPage.noTitle(
       showCityDropdown: false,
       appBarBottom: bottom,
-      children: list
-          .map((e) => ListTile(
-                title: Text(e),
-              ))
-          .toList(),
+      children: [
+        const SizedBox(height: 16.0),
+        LoftProfileSection(
+          label: 'Comprar',
+          items: [
+            ProfileSectionItem(title: 'Simulador de Compra', onTap: () {}),
+          ],
+        ),
+        const SizedBox(height: 16.0),
+        LoftProfileSection(
+          label: 'Crédito',
+          items: [
+            ProfileSectionItem(title: 'Financiamento', onTap: () {}),
+            ProfileSectionItem(title: 'Crédito com Garantia', onTap: () {}),
+            ProfileSectionItem(title: 'Parcerias', onTap: () {}),
+          ],
+        ),
+        const SizedBox(height: 16.0),
+        LoftProfileSection(
+          label: 'Vender',
+          items: [
+            ProfileSectionItem(title: 'Anunciar Imóvel', onTap: () {}),
+            ProfileSectionItem(title: 'Como Vender na Loft', onTap: () {}),
+          ],
+        ),
+        const SizedBox(height: 16.0),
+        LoftProfileSection(
+          label: 'Loft',
+          items: [
+            ProfileSectionItem(title: 'Central de Ajuda', onTap: () {}),
+            ProfileSectionItem(title: 'Assessoria Imobiliária', onTap: () {}),
+            ProfileSectionItem(title: 'Corretores', onTap: () {}),
+            ProfileSectionItem(title: 'Como Funciona', onTap: () {}),
+            ProfileSectionItem(title: 'Quem somos', onTap: () {}),
+          ],
+        ),
+        const SizedBox(height: 16.0),
+        LoftProfileSection(
+          label: 'Políticas',
+          items: [
+            ProfileSectionItem(title: 'Alô Compliance', onTap: () {}),
+            ProfileSectionItem(title: 'Política de Privacidade', onTap: () {}),
+            ProfileSectionItem(
+                title: 'Termos e Confiçōes de Uso', onTap: () {}),
+            ProfileSectionItem(title: 'Guia de Conduta e Ética', onTap: () {}),
+          ],
+        ),
+        const SizedBox(height: 32.0),
+      ],
     );
   }
 }
