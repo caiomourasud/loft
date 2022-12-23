@@ -5,11 +5,13 @@ import 'package:loft/app/themes/loft_theme.dart';
 
 class LoftAppBarContent extends StatelessWidget {
   const LoftAppBarContent({
+    required this.cityName,
     this.showDropdown = true,
     this.onDropdownTap,
     super.key,
   });
 
+  final String cityName;
   final bool showDropdown;
   final Function()? onDropdownTap;
 
@@ -29,7 +31,7 @@ class LoftAppBarContent extends StatelessWidget {
               children: [
                 const SizedBox(width: 12.0),
                 Text(
-                  'Sao Paulo',
+                  cityName,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

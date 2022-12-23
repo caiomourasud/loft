@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class LoftButton extends StatelessWidget {
   const LoftButton({
     required this.label,
+    this.onPressed,
     super.key,
   });
 
   final String label;
+  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class LoftButton extends StatelessWidget {
         overlayColor: MaterialStateProperty.all(const Color(0xFFEB673B)),
         foregroundColor: MaterialStateProperty.all(Colors.white),
       ),
-      onPressed: () {},
+      onPressed: onPressed,
       child: Text(label),
     );
   }
