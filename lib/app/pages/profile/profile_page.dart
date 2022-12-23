@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loft/app/components/loft_button.dart';
 import 'package:loft/app/components/loft_profile_section.dart';
 import 'package:loft/app/pages/loft_page.dart';
 
@@ -13,7 +14,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final list = List<String>.generate(100, (i) => 'Item ${i + 1}');
 
   PreferredSizeWidget get bottom => PreferredSize(
-      preferredSize: const Size.fromHeight(132.0),
+      preferredSize: const Size.fromHeight(152.0),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
@@ -29,25 +30,9 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 4.0),
             const Text('Entre ou se cadastre para salvar seus imóveis'
                 ' favoritos e agendar visitas.'),
-            const SizedBox(height: 4.0),
-            ElevatedButton(
-                style: ButtonStyle(
-                  elevation: MaterialStateProperty.all(0.0),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      side: const BorderSide(
-                        color: Colors.deepOrange,
-                      ),
-                    ),
-                  ),
-                  overlayColor:
-                      MaterialStateProperty.all(const Color(0xFFEB673B)),
-                  foregroundColor: MaterialStateProperty.all(Colors.white),
-                ),
-                onPressed: () {},
-                child: const Text('Entrar')),
-            const SizedBox(height: 8.0),
+            const SizedBox(height: 16.0),
+            const LoftButton(label: 'Entrar'),
+            const SizedBox(height: 16.0),
           ],
         ),
       ));

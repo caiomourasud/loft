@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loft/app/components/loft_app_bar_content.dart';
+import 'package:loft/app/components/loft_button.dart';
 
 enum LoftAppBarType {
   withTitle,
@@ -70,28 +71,91 @@ class _LoftPageState extends State<LoftPage> {
     }
   }
 
-  final list = List<String>.generate(100, (i) => 'Item ${i + 1}');
-
-  Widget get title => widget._title != null && widget._title != ''
-      ? AnimatedDefaultTextStyle(
-          duration: const Duration(milliseconds: 200),
-          style: listScrolled
-              ? Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ) ??
-                  const TextStyle()
-              : Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ) ??
-                  const TextStyle(),
-          child: Text(
-            widget._title!,
-          ),
-        )
-      : LoftAppBarContent(showDropdown: widget._showCityDropdown);
+  final list = List<String>.generate(16, (i) => 'Item ${i + 1}');
 
   @override
   Widget build(BuildContext context) {
+    Widget title() => widget._title != null && widget._title != ''
+        ? AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 200),
+            style: listScrolled
+                ? Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ) ??
+                    const TextStyle()
+                : Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ) ??
+                    const TextStyle(),
+            child: Text(
+              widget._title!,
+            ),
+          )
+        : LoftAppBarContent(
+            showDropdown: widget._showCityDropdown,
+            onDropdownTap: () {
+              showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: double.infinity,
+                    maxHeight: (MediaQuery.of(context).size.height -
+                            MediaQuery.of(context).viewPadding.top) -
+                        36.0,
+                  ),
+                  builder: (context) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 16.0),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 16.0),
+                          child: Text(
+                            'Onde você quer morar?',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ),
+                        const Divider(color: Colors.grey),
+                        Expanded(
+                            child: ListView(
+                          children: list
+                              .map((e) => ListTile(
+                                    title: Text(e),
+                                  ))
+                              .toList(),
+                        )),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Divider(color: Colors.grey, height: 1.0),
+                            const SizedBox(height: 12.0),
+                            const Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                ),
+                                child: LoftButton(label: 'Selecionar cidade')),
+                            const SizedBox(height: 12.0),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).viewPadding.bottom),
+                          ],
+                        )
+                      ],
+                    );
+                  });
+            },
+          );
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -99,7 +163,7 @@ class _LoftPageState extends State<LoftPage> {
         bottom: widget.appBarBottom,
         elevation: listScrolled ? 1.0 : 0.0,
         backgroundColor: Colors.white,
-        title: title,
+        title: title(),
         toolbarHeight:
             widget._loftAppBarType == LoftAppBarType.withTitle && listScrolled
                 ? kToolbarHeight - 16.0

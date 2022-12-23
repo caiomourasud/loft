@@ -6,10 +6,12 @@ import 'package:loft/app/themes/loft_theme.dart';
 class LoftAppBarContent extends StatelessWidget {
   const LoftAppBarContent({
     this.showDropdown = true,
+    this.onDropdownTap,
     super.key,
   });
 
   final bool showDropdown;
+  final Function()? onDropdownTap;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +22,9 @@ class LoftAppBarContent extends StatelessWidget {
           color: LoftTheme.colorCustom,
           height: 32.0,
         ),
-        const SizedBox(width: 12.0),
         if (showDropdown)
           GestureDetector(
-            onTap: () {},
+            onTap: onDropdownTap,
             child: Row(
               children: [
                 const SizedBox(width: 12.0),
