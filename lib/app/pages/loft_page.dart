@@ -115,7 +115,13 @@ class _LoftPageState extends State<LoftPage> {
                 ? kToolbarHeight - 16.0
                 : null,
       ),
-      body: ListView(controller: _scrollController, children: widget.children),
+      body: Center(
+        child: ListView(
+          shrinkWrap: true,
+          controller: _scrollController,
+          children: widget.children,
+        ),
+      ),
     );
   }
 }

@@ -11,8 +11,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final list = List<String>.generate(100, (i) => 'Item ${i + 1}');
-
   PreferredSizeWidget get bottom => PreferredSize(
       preferredSize: const Size.fromHeight(152.0),
       child: Padding(
@@ -31,7 +29,10 @@ class _ProfilePageState extends State<ProfilePage> {
             const Text('Entre ou se cadastre para salvar seus imóveis'
                 ' favoritos e agendar visitas.'),
             const SizedBox(height: 16.0),
-            const LoftButton(label: 'Entrar'),
+            LoftButton(
+              label: 'Entrar',
+              onPressed: () {},
+            ),
             const SizedBox(height: 16.0),
           ],
         ),
