@@ -13,6 +13,7 @@ class LoftPage extends StatefulWidget {
     required this.children,
     this.scrollController,
     this.appBarBottom,
+    this.shrinkWrap = false,
     String? title,
     super.key,
   })  : _title = title,
@@ -23,6 +24,7 @@ class LoftPage extends StatefulWidget {
     required this.children,
     this.scrollController,
     this.appBarBottom,
+    this.shrinkWrap = false,
     bool showCityDropdown = true,
     super.key,
   })  : _showCityDropdown = showCityDropdown,
@@ -32,6 +34,7 @@ class LoftPage extends StatefulWidget {
   final List<Widget> children;
   final ScrollController? scrollController;
   final PreferredSizeWidget? appBarBottom;
+  final bool shrinkWrap;
 
   final bool _showCityDropdown;
   final String? _title;
@@ -109,7 +112,10 @@ class _LoftPageState extends State<LoftPage> {
         bottom: widget.appBarBottom,
         elevation: listScrolled ? 1.0 : 0.0,
         backgroundColor: Colors.white,
-        title: title(),
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: title(),
+        ),
         toolbarHeight:
             widget._loftAppBarType == LoftAppBarType.withTitle && listScrolled
                 ? kToolbarHeight - 16.0
@@ -117,7 +123,7 @@ class _LoftPageState extends State<LoftPage> {
       ),
       body: Center(
         child: ListView(
-          shrinkWrap: true,
+          shrinkWrap: widget.shrinkWrap,
           controller: _scrollController,
           children: widget.children,
         ),
