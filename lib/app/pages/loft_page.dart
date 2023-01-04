@@ -14,6 +14,7 @@ class LoftPage extends StatefulWidget {
     this.scrollController,
     this.appBarBottom,
     this.shrinkWrap = false,
+    this.onPullToRefresh,
     String? title,
     super.key,
   })  : _title = title,
@@ -25,6 +26,7 @@ class LoftPage extends StatefulWidget {
     this.scrollController,
     this.appBarBottom,
     this.shrinkWrap = false,
+    this.onPullToRefresh,
     bool showCityDropdown = true,
     super.key,
   })  : _showCityDropdown = showCityDropdown,
@@ -35,6 +37,7 @@ class LoftPage extends StatefulWidget {
   final ScrollController? scrollController;
   final PreferredSizeWidget? appBarBottom;
   final bool shrinkWrap;
+  final Function()? onPullToRefresh;
 
   final bool _showCityDropdown;
   final String? _title;
@@ -105,7 +108,7 @@ class _LoftPageState extends State<LoftPage> {
             },
           );
 
-    return Scaffold(
+    Widget scaffold = Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: false,
@@ -129,5 +132,13 @@ class _LoftPageState extends State<LoftPage> {
         ),
       ),
     );
+
+    return widget.onPullToRefresh == null
+        ? scaffold
+        : RefreshIndicator(
+            displacement: MediaQuery.of(context).viewPadding.top + 8.0,
+            onRefresh: () => widget.onPullToRefresh?.call(),
+            child: scaffold,
+          );
   }
 }

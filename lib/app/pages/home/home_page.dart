@@ -67,6 +67,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return LoftPage.noTitle(
+      onPullToRefresh: () async {
+        return await Future.delayed(const Duration(seconds: 2), () {});
+      },
       children: [
         const SizedBox(height: 32.0),
         Padding(
