@@ -23,9 +23,9 @@ class _HomePageState extends State<HomePage> {
     Apartment(
       id: 1,
       pictures: [
-        'https://smartcitylocating.com/wp-content/uploads/2017/08/20988599_2031229817123532_3881499183829065550_o-300x200.jpg',
-        'https://smartcitylocating.com/wp-content/uploads/2017/08/20746161_2026944417552072_6515591820613784608_o.jpg',
-        'https://smartcitylocating.com/wp-content/uploads/2017/08/20785783_2028811394032041_394852809457363598_o-300x200.jpg',
+        'https://resizedimgs.zapimoveis.com.br/fit-in/800x360/named.images.sp/b09ad4651460a70ddd59cdaa04ea8f77/apartamento-com-4-quartos-para-alugar-108m-no-parque-amazonia-goiania.jpg',
+        'https://resizedimgs.zapimoveis.com.br/fit-in/800x360/named.images.sp/164946e92da5c8fcc235cc8c0b343d1c/apartamento-com-4-quartos-para-alugar-108m-no-parque-amazonia-goiania.jpg',
+        'https://resizedimgs.zapimoveis.com.br/fit-in/800x360/named.images.sp/bae10e2bd4a4a9ea9ffeb50b56f96cc1/apartamento-com-4-quartos-para-alugar-108m-no-parque-amazonia-goiania.jpg',
       ],
       type: 1,
       price: 145.000,
@@ -147,6 +147,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 32.0),
                   LoftOutlinedButton(
                     label: 'Anunciar meu imóvel',
+                    loftButtonSize: LoftButtonSize.small,
                     onPressed: () {},
                   ),
                   const SizedBox(height: 16.0),

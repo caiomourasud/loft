@@ -43,7 +43,7 @@ class _LoftImageCarouselState extends State<LoftImageCarousel> {
                 });
               },
               children: widget.images
-                  .map((picture) => Image.network(picture, fit: BoxFit.fill))
+                  .map((picture) => Image.network(picture, fit: BoxFit.cover))
                   .toList(),
             ),
             Row(
