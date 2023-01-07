@@ -30,7 +30,7 @@ class _LoftImageCarouselState extends State<LoftImageCarousel> {
       clipBehavior: Clip.hardEdge,
       elevation: 0.0,
       child: SizedBox(
-        height: 180.0,
+        height: 180,
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,
           children: [

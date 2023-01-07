@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:loft/app/components/loft-card-carousel/loft_neighborhood_card.dart';
 import 'package:loft/app/models/carousel_card.dart';
-import 'package:collection/collection.dart';
 
 class LoftCardCarousel extends StatefulWidget {
   const LoftCardCarousel({
@@ -18,6 +18,7 @@ class LoftCardCarousel extends StatefulWidget {
 
 class _LoftApartmentCarouselState extends State<LoftCardCarousel> {
   final pageController = PageController(viewportFraction: 0.84);
+  final maxWidth = 340.0;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -41,66 +42,48 @@ class _LoftApartmentCarouselState extends State<LoftCardCarousel> {
             ),
           ),
           const SizedBox(height: 8.0),
-          Expanded(
-            child: PageView(
-              padEnds: false,
-              controller: pageController,
-              children: widget.carouselCards
-                  .mapIndexed((index, carouselCard) => Padding(
-                        padding: EdgeInsets.only(
-                            left: 20.0,
-                            right: index == (widget.carouselCards.length - 1)
-                                ? 20.0
-                                : 0.0),
-                        child: Card(
-                          margin: EdgeInsets.zero,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          color: Colors.teal,
-                          elevation: 0.0,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(carouselCard.title,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              )),
-                                      const SizedBox(height: 8.0),
-                                      Text(carouselCard.subtitle,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium
-                                              ?.copyWith(
-                                                color: Colors.white,
-                                              )),
-                                    ],
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.arrow_forward_outlined,
-                                  color: Colors.white,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ))
-                  .toList(),
+          if (MediaQuery.of(context).size.width * 0.84 <= maxWidth)
+            Expanded(
+              child: PageView.builder(
+                padEnds: false,
+                controller: pageController,
+                itemCount: widget.carouselCards.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.only(
+                      left: 20.0,
+                      right: index == (widget.carouselCards.length - 1)
+                          ? 20.0
+                          : 0.0,
+                    ),
+                    child: LoftNeighborhoodCard(
+                      carouselCard: widget.carouselCards[index],
+                    ),
+                  );
+                },
+              ),
+            )
+          else
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.carouselCards.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    constraints: BoxConstraints(maxWidth: maxWidth),
+                    margin: EdgeInsets.symmetric(
+                        horizontal: index != 0 &&
+                                index != (widget.carouselCards.length - 1)
+                            ? 20.0
+                            : 0.0),
+                    child: LoftNeighborhoodCard(
+                      carouselCard: widget.carouselCards[index],
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
         ],
       ),
     );
