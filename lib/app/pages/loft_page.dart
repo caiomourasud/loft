@@ -10,35 +10,37 @@ enum LoftAppBarType {
 
 class LoftPage extends StatefulWidget {
   const LoftPage.withTitle({
-    required this.children,
+    List<Widget>? children,
+    String? title,
+    this.body,
     this.scrollController,
     this.appBarBottom,
-    this.shrinkWrap = false,
     this.onPullToRefresh,
-    String? title,
     super.key,
-  })  : _title = title,
+  })  : _children = children,
+        _title = title,
         _showCityDropdown = false,
         _loftAppBarType = LoftAppBarType.withTitle;
 
   const LoftPage.noTitle({
-    required this.children,
+    List<Widget>? children,
+    bool showCityDropdown = true,
+    this.body,
     this.scrollController,
     this.appBarBottom,
-    this.shrinkWrap = false,
     this.onPullToRefresh,
-    bool showCityDropdown = true,
     super.key,
-  })  : _showCityDropdown = showCityDropdown,
+  })  : _children = children,
+        _showCityDropdown = showCityDropdown,
         _title = null,
         _loftAppBarType = LoftAppBarType.noTitle;
 
-  final List<Widget> children;
   final ScrollController? scrollController;
   final PreferredSizeWidget? appBarBottom;
-  final bool shrinkWrap;
   final Function()? onPullToRefresh;
 
+  final Widget? body;
+  final List<Widget>? _children;
   final bool _showCityDropdown;
   final String? _title;
   final LoftAppBarType? _loftAppBarType;
@@ -124,13 +126,13 @@ class _LoftPageState extends State<LoftPage> {
                 ? kToolbarHeight - 16.0
                 : null,
       ),
-      body: Center(
-        child: ListView(
-          shrinkWrap: widget.shrinkWrap,
-          controller: _scrollController,
-          children: widget.children,
-        ),
-      ),
+      body: widget.body ??
+          Center(
+            child: ListView(
+              controller: _scrollController,
+              children: widget._children ?? [],
+            ),
+          ),
     );
 
     return widget.onPullToRefresh == null

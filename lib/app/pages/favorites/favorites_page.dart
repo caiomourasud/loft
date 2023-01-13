@@ -14,25 +14,29 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return LoftPage.withTitle(
-      shrinkWrap: true,
       title: 'Favoritos',
-      children: [
-        const SizedBox(height: kToolbarHeight),
-        LoftEmptyPageComponent(
-          icon: Icon(
-            Icons.favorite,
-            color: Colors.grey[400],
-            size: 60.0,
-          ),
-          title: 'Você ainda não tem nenhum \nimóvel favorito.',
-          subtitle:
-              'Para salvar um imóvel é só clicar no ícone de coração e ele irá aparecer aqui.',
-          actionButton: LoftOutlinedButton(
-            label: 'Explorar imóveis',
-            onPressed: () {},
-          ),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: kToolbarHeight),
+            LoftEmptyPageComponent(
+              icon: Icon(
+                Icons.favorite,
+                color: Colors.grey[400],
+                size: 60.0,
+              ),
+              title: 'Você ainda não tem nenhum \nimóvel favorito.',
+              subtitle:
+                  'Para salvar um imóvel é só clicar no ícone de coração e ele irá aparecer aqui.',
+              actionButton: LoftOutlinedButton(
+                label: 'Explorar imóveis',
+                onPressed: () {},
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

@@ -31,7 +31,6 @@ class _VisitsPageState extends State<VisitsPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return LoftPage.withTitle(
-      shrinkWrap: true,
       title: 'Minhas visitas',
       appBarBottom: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -54,22 +53,27 @@ class _VisitsPageState extends State<VisitsPage> with TickerProviderStateMixin {
                   ),
                 ],
               ))),
-      children: [
-        LoftEmptyPageComponent(
-          icon: Icon(
-            CupertinoIcons.calendar_today,
-            color: LoftTheme.colorCustom,
-            size: 60.0,
-          ),
-          title: 'A casa é sua pode entrar.',
-          subtitle:
-              'Crie ou acesse sua conta para agendar visitas gratuitas e sem compromisso.',
-          actionButton: LoftButton(
-            label: 'Acessar conta',
-            onPressed: () {},
-          ),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            LoftEmptyPageComponent(
+              icon: Icon(
+                CupertinoIcons.calendar_today,
+                color: LoftTheme.colorCustom,
+                size: 60.0,
+              ),
+              title: 'A casa é sua pode entrar.',
+              subtitle:
+                  'Crie ou acesse sua conta para agendar visitas gratuitas e sem compromisso.',
+              actionButton: LoftButton(
+                label: 'Acessar conta',
+                onPressed: () {},
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
