@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:loft/app/pages/loft_page.dart';
+import 'package:loft/app/components/loft_chip.dart';
+import 'package:loft/app/pages/search/components/map_list_button.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({
@@ -16,6 +19,8 @@ class _SearchPageState extends State<SearchPage> {
   late GoogleMapController mapController;
   final _center = const LatLng(45.521563, -122.677433);
   LatLng? target;
+
+  bool showList = true;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -76,13 +81,64 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return LoftPage.noTitle(
-      body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        myLocationEnabled: true,
-        initialCameraPosition: CameraPosition(
-          target: target ?? _center,
-          zoom: 11.0,
+      appBarBottom: PreferredSize(
+        preferredSize: const Size.fromHeight((kToolbarHeight * 2) + 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: kToolbarHeight,
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: CupertinoSearchTextField(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(kToolbarHeight),
+                    color: Colors.grey[100],
+                    border: Border.all(color: Colors.grey.shade400)),
+                prefixInsets:
+                    const EdgeInsetsDirectional.fromSTEB(20.0, 0, 8.0, 4),
+                placeholder: 'Busque por avenida',
+              ),
+            ),
+            Container(
+              height: kToolbarHeight,
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                children: const [
+                  LoftChip(
+                    label: 'Filtrar',
+                    icon: CupertinoIcons.slider_horizontal_3,
+                  ),
+                  LoftChip.outlined(label: 'Preço'),
+                  LoftChip.outlined(label: 'Cômodos'),
+                  LoftChip.outlined(label: 'Metragem'),
+                ],
+              ),
+            ),
+          ],
         ),
+      ),
+      body: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            myLocationEnabled: true,
+            // myLocationButtonEnabled: false,
+            initialCameraPosition: CameraPosition(
+              target: target ?? _center,
+              zoom: 11.0,
+            ),
+          ),
+          MapListButton(
+              showList: showList,
+              onTap: () {
+                setState(() {
+                  showList = !showList;
+                });
+              }),
+        ],
       ),
     );
   }

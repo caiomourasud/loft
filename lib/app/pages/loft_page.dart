@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:loft/app/components/loft_app_bar_content.dart';
 import 'package:loft/app/components/select_city_modal.dart';
 import 'package:loft/app/models/city.dart';
@@ -10,28 +11,26 @@ enum LoftAppBarType {
 
 class LoftPage extends StatefulWidget {
   const LoftPage.withTitle({
-    List<Widget>? children,
+    this.children,
     String? title,
     this.body,
     this.scrollController,
     this.appBarBottom,
     this.onPullToRefresh,
     super.key,
-  })  : _children = children,
-        _title = title,
+  })  : _title = title,
         _showCityDropdown = false,
         _loftAppBarType = LoftAppBarType.withTitle;
 
   const LoftPage.noTitle({
-    List<Widget>? children,
+    this.children,
     bool showCityDropdown = true,
     this.body,
     this.scrollController,
     this.appBarBottom,
     this.onPullToRefresh,
     super.key,
-  })  : _children = children,
-        _showCityDropdown = showCityDropdown,
+  })  : _showCityDropdown = showCityDropdown,
         _title = null,
         _loftAppBarType = LoftAppBarType.noTitle;
 
@@ -39,8 +38,8 @@ class LoftPage extends StatefulWidget {
   final PreferredSizeWidget? appBarBottom;
   final Function()? onPullToRefresh;
 
+  final List<Widget>? children;
   final Widget? body;
-  final List<Widget>? _children;
   final bool _showCityDropdown;
   final String? _title;
   final LoftAppBarType? _loftAppBarType;
@@ -110,29 +109,34 @@ class _LoftPageState extends State<LoftPage> {
             },
           );
 
-    Widget scaffold = Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        centerTitle: false,
-        bottom: widget.appBarBottom,
-        elevation: listScrolled ? 1.0 : 0.0,
+    Widget scaffold = KeyboardDismissOnTap(
+      child: Scaffold(
         backgroundColor: Colors.white,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: title(),
-        ),
-        toolbarHeight:
-            widget._loftAppBarType == LoftAppBarType.withTitle && listScrolled
-                ? kToolbarHeight - 16.0
-                : null,
-      ),
-      body: widget.body ??
-          Center(
-            child: ListView(
-              controller: _scrollController,
-              children: widget._children ?? [],
-            ),
+        appBar: AppBar(
+          centerTitle: false,
+          bottom: widget.appBarBottom,
+          elevation: listScrolled ||
+                  (widget.appBarBottom != null && widget.body != null)
+              ? 1.0
+              : 0.0,
+          backgroundColor: Colors.white,
+          title: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: title(),
           ),
+          toolbarHeight:
+              widget._loftAppBarType == LoftAppBarType.withTitle && listScrolled
+                  ? kToolbarHeight - 16.0
+                  : null,
+        ),
+        body: widget.body ??
+            Center(
+              child: ListView(
+                controller: _scrollController,
+                children: widget.children ?? [],
+              ),
+            ),
+      ),
     );
 
     return widget.onPullToRefresh == null
