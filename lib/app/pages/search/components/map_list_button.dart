@@ -33,13 +33,13 @@ class MapListButton extends StatelessWidget {
             children: [
               Icon(
                 showList
-                    ? Icons.format_list_bulleted_rounded
-                    : Icons.location_on,
+                    ? Icons.location_on
+                    : Icons.format_list_bulleted_rounded,
                 color: LoftTheme.colorCustom,
               ),
               const SizedBox(width: 8.0),
               Text(
-                showList ? 'Lista' : 'Mapa',
+                showList ? 'Mapa' : 'Lista',
               ),
             ],
           ),

@@ -38,8 +38,7 @@ class LoftChip extends StatelessWidget {
             label,
             style: TextStyle(
                 color: _type == LoftChipType.filled ? Colors.white : null,
-                fontWeight:
-                    _type == LoftChipType.filled ? FontWeight.bold : null),
+                fontWeight: FontWeight.w600),
           ),
           deleteIcon: Padding(
             padding: const EdgeInsets.only(right: 4.0),
