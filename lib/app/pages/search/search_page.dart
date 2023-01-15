@@ -18,11 +18,12 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  late DraggableScrollableController draggableScrollableController;
   late GoogleMapController mapController;
   // final _center = const LatLng(45.521563, -122.677433);
   LatLng target = const LatLng(45.521563, -122.677433);
-
   bool showList = true;
+  bool isDraggableScrollSheetOpenned = false;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -77,7 +78,27 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     _handleLocationPermission();
     _getCurrentPosition();
+    draggableScrollableController = DraggableScrollableController();
+    draggableScrollableController.addListener(() {
+      if (draggableScrollableController.pixels ==
+              draggableScrollableController.sizeToPixels(1.0) &&
+          !isDraggableScrollSheetOpenned) {
+        setState(() {
+          isDraggableScrollSheetOpenned = true;
+        });
+      } else if (isDraggableScrollSheetOpenned) {
+        setState(() {
+          isDraggableScrollSheetOpenned = false;
+        });
+      }
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    draggableScrollableController.removeListener(() {});
+    super.dispose();
   }
 
   @override
@@ -167,152 +188,159 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
       ),
-      body: Stack(
-        alignment: AlignmentDirectional.bottomCenter,
-        children: [
-          GoogleMap(
-            onMapCreated: _onMapCreated,
-            myLocationEnabled: true,
-            // myLocationButtonEnabled: false,
-            initialCameraPosition: CameraPosition(
-              target: target,
-              zoom: 13.0,
-            ),
-            markers: {
-              const Marker(
-                markerId: MarkerId('1'),
-                position: LatLng(45.520400, -122.647433),
+      body: LayoutBuilder(builder: (context, constraints) {
+        return Stack(
+          alignment: AlignmentDirectional.bottomCenter,
+          children: [
+            GoogleMap(
+              onMapCreated: _onMapCreated,
+              myLocationEnabled: true,
+              // myLocationButtonEnabled: false,
+              initialCameraPosition: CameraPosition(
+                target: target,
+                zoom: 13.0,
               ),
-              const Marker(
-                markerId: MarkerId('2'),
-                position: LatLng(45.521563, -122.677433),
-              ),
-            },
-          ),
-          if (showList)
-            DraggableScrollableSheet(
-              initialChildSize: 0.4,
-              minChildSize: 0.4,
-              builder: (context, controller) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(32.0),
-                        topRight: Radius.circular(32.0)),
-                    color: Colors.white,
-                  ),
-                  child: ListView(
-                    physics: const ClampingScrollPhysics(),
-                    controller: controller,
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(32.0),
-                              topRight: Radius.circular(32.0)),
-                          color: Colors.white,
-                        ),
-                        // height: MediaQuery.of(context).size.height,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 4.0,
-                                width: 32.0,
-                                margin: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(4.0),
-                                  ),
-                                  color: Colors.grey.shade300,
-                                ),
-                              ),
-                              const SizedBox(height: 10.0),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium,
-                                          children: [
-                                            TextSpan(
-                                                text: '55.837',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium
-                                                    ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    )),
-                                            const TextSpan(text: ' imóveis'),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4.0),
-                                      Text('São Paulo, SP',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall)
-                                    ],
-                                  ),
-                                  const LoftChip.outlined(label: 'Ordenar')
-                                ],
-                              ),
-                              Column(
-                                children: apartments
-                                    .map(
-                                      (apartment) => Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 10.0,
-                                        ),
-                                        child: LoftApartmentCarouselItem(
-                                          apartment: apartment,
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                              Column(
-                                children: apartments
-                                    .map(
-                                      (apartment) => Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 10.0,
-                                        ),
-                                        child: LoftApartmentCarouselItem(
-                                          apartment: apartment,
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                              const SizedBox(height: 60.0),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+              markers: {
+                const Marker(
+                  markerId: MarkerId('1'),
+                  position: LatLng(45.520400, -122.647433),
+                ),
+                const Marker(
+                  markerId: MarkerId('2'),
+                  position: LatLng(45.521563, -122.677433),
+                ),
               },
             ),
-          MapListButton(
-              showList: showList,
-              onTap: () {
-                setState(() {
-                  showList = !showList;
-                });
-              }),
-        ],
-      ),
+            if (showList)
+              DraggableScrollableSheet(
+                controller: draggableScrollableController,
+                initialChildSize: 0.4,
+                minChildSize: 0.4,
+                builder: (context, controller) {
+                  return Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      if (isDraggableScrollSheetOpenned)
+                        Container(
+                          color: Colors.white,
+                          height: constraints.maxHeight / 1.35,
+                        ),
+                      ListView(
+                        controller: controller,
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(32.0),
+                                  topRight: Radius.circular(32.0)),
+                              color: Colors.white,
+                            ),
+                            // height: MediaQuery.of(context).size.height,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 4.0,
+                                    width: 32.0,
+                                    margin: const EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(4.0),
+                                      ),
+                                      color: Colors.grey.shade300,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10.0),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          RichText(
+                                            text: TextSpan(
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium,
+                                              children: [
+                                                TextSpan(
+                                                    text: '55.837',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium
+                                                        ?.copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        )),
+                                                const TextSpan(
+                                                    text: ' imóveis'),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          Text('São Paulo, SP',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall)
+                                        ],
+                                      ),
+                                      const LoftChip.outlined(label: 'Ordenar')
+                                    ],
+                                  ),
+                                  Column(
+                                    children: apartments
+                                        .map(
+                                          (apartment) => Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 10.0,
+                                            ),
+                                            child: LoftApartmentCarouselItem(
+                                              apartment: apartment,
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                  Column(
+                                    children: apartments
+                                        .map(
+                                          (apartment) => Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 10.0,
+                                            ),
+                                            child: LoftApartmentCarouselItem(
+                                              apartment: apartment,
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                  const SizedBox(height: 60.0),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              ),
+            MapListButton(
+                showList: showList,
+                onTap: () {
+                  setState(() {
+                    showList = !showList;
+                    isDraggableScrollSheetOpenned = false;
+                  });
+                }),
+          ],
+        );
+      }),
     );
   }
 }
