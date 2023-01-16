@@ -1,3 +1,9 @@
+class ApartmentLocation {
+  const ApartmentLocation(this.latitude, this.longitude);
+  final double latitude;
+  final double longitude;
+}
+
 class Apartment {
   const Apartment({
     required this.id,
@@ -8,6 +14,7 @@ class Apartment {
     required this.address,
     required this.roomNumbers,
     required this.carSpaces,
+    required this.latLng,
     this.isFavorite,
   });
 
@@ -20,4 +27,5 @@ class Apartment {
   final int roomNumbers;
   final int carSpaces;
   final bool? isFavorite;
+  final ApartmentLocation latLng;
 }

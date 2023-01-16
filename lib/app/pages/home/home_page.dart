@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
       address: 'Santa Adelaide, Cidade Tiradentes',
       roomNumbers: 2,
       carSpaces: 1,
+      latLng: ApartmentLocation(45.510400, -122.657433),
     ),
     Apartment(
       id: 2,
@@ -48,6 +49,7 @@ class _HomePageState extends State<HomePage> {
       address: 'das Lágrimas, Sacomã',
       roomNumbers: 3,
       carSpaces: 1,
+      latLng: ApartmentLocation(45.530400, -122.667433),
     ),
     Apartment(
       id: 3,
@@ -62,6 +64,7 @@ class _HomePageState extends State<HomePage> {
       address: 'Manoel Antônio Pinto, Vila Andrade',
       roomNumbers: 3,
       carSpaces: 2,
+      latLng: ApartmentLocation(45.510400, -122.617433),
     ),
   ];
 

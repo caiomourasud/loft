@@ -81,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
-    getSearchPlaceholder();
+    _getSearchPlaceholder();
     _handleLocationPermission();
     _getCurrentPosition();
     draggableScrollableController = DraggableScrollableController();
@@ -119,7 +119,7 @@ class _SearchPageState extends State<SearchPage> {
     super.dispose();
   }
 
-  Future<void> getSearchPlaceholder() async {
+  Future<void> _getSearchPlaceholder() async {
     List<String> list = ['bairro', 'rua', 'avenida', 'condomínio'];
     String searchString = 'Busque por';
     int count = 0;
@@ -152,6 +152,7 @@ class _SearchPageState extends State<SearchPage> {
         address: 'Santa Adelaide, Cidade Tiradentes',
         roomNumbers: 2,
         carSpaces: 1,
+        latLng: ApartmentLocation(45.510400, -122.657433),
       ),
       Apartment(
         id: 2,
@@ -166,6 +167,7 @@ class _SearchPageState extends State<SearchPage> {
         address: 'das Lágrimas, Sacomã',
         roomNumbers: 3,
         carSpaces: 1,
+        latLng: ApartmentLocation(45.530400, -122.667433),
       ),
       Apartment(
         id: 3,
@@ -180,6 +182,7 @@ class _SearchPageState extends State<SearchPage> {
         address: 'Manoel Antônio Pinto, Vila Andrade',
         roomNumbers: 3,
         carSpaces: 2,
+        latLng: ApartmentLocation(45.510400, -122.617433),
       ),
     ];
 
@@ -192,28 +195,24 @@ class _SearchPageState extends State<SearchPage> {
               children: [
                 GoogleMap(
                   onMapCreated: _onMapCreated,
-                  myLocationEnabled: true,
-                  // myLocationButtonEnabled: false,
+                  // myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
                   initialCameraPosition: CameraPosition(
                     target: target,
                     zoom: 13.0,
                   ),
                   markers: {
-                    const Marker(
-                      markerId: MarkerId('1'),
-                      position: LatLng(45.520400, -122.647433),
-                    ),
-                    const Marker(
-                      markerId: MarkerId('2'),
-                      position: LatLng(45.521563, -122.677433),
-                    ),
+                    ...apartments.map((apartment) => Marker(
+                        markerId: MarkerId('${apartment.id}'),
+                        position: LatLng(apartment.latLng.latitude,
+                            apartment.latLng.longitude))),
                   },
                 ),
                 if (showList)
                   DraggableScrollableSheet(
                     controller: draggableScrollableController,
-                    initialChildSize: 0.4,
-                    minChildSize: 0.4,
+                    initialChildSize: 0.33,
+                    minChildSize: 0.33,
                     builder: (context, controller) {
                       return Stack(
                         alignment: AlignmentDirectional.bottomCenter,
@@ -233,7 +232,6 @@ class _SearchPageState extends State<SearchPage> {
                                       topRight: Radius.circular(32.0)),
                                   color: Colors.white,
                                 ),
-                                // height: MediaQuery.of(context).size.height,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20.0),
@@ -266,7 +264,8 @@ class _SearchPageState extends State<SearchPage> {
                                                       .bodyMedium,
                                                   children: [
                                                     TextSpan(
-                                                        text: '55.837',
+                                                        text:
+                                                            '${apartments.length}',
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .bodyMedium
@@ -275,8 +274,12 @@ class _SearchPageState extends State<SearchPage> {
                                                                   FontWeight
                                                                       .bold,
                                                             )),
-                                                    const TextSpan(
-                                                        text: ' imóveis'),
+                                                    TextSpan(
+                                                        text:
+                                                            apartments.length >
+                                                                    1
+                                                                ? ' imóveis'
+                                                                : ' imóvel'),
                                                   ],
                                                 ),
                                               ),
@@ -290,22 +293,6 @@ class _SearchPageState extends State<SearchPage> {
                                           const LoftChip.outlined(
                                               label: 'Ordenar')
                                         ],
-                                      ),
-                                      Column(
-                                        children: apartments
-                                            .map(
-                                              (apartment) => Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  vertical: 10.0,
-                                                ),
-                                                child:
-                                                    LoftApartmentCarouselItem(
-                                                  apartment: apartment,
-                                                ),
-                                              ),
-                                            )
-                                            .toList(),
                                       ),
                                       Column(
                                         children: apartments

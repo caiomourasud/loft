@@ -90,6 +90,7 @@ class _LoftPageState extends State<LoftPage> {
             showCityDropdown: widget._showCityDropdown,
             appBarHeight: widget.appBarHeight,
             selectedCity: selectedCity,
+            hasScaffoldBody: widget.body != null,
             onCitySelected: (city) {
               setState(() => selectedCity = city);
             },
