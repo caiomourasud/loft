@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:loft/app/components/loft_app_bar_content.dart';
-import 'package:loft/app/components/select_city_modal.dart';
+import 'package:loft/app/components/loft_app_bar.dart';
 import 'package:loft/app/models/city.dart';
-
-enum LoftAppBarType {
-  withTitle,
-  noTitle,
-}
 
 class LoftPage extends StatefulWidget {
   const LoftPage.withTitle({
@@ -17,6 +11,7 @@ class LoftPage extends StatefulWidget {
     this.scrollController,
     this.appBarBottom,
     this.onPullToRefresh,
+    this.appBarHeight,
     super.key,
   })  : _title = title,
         _showCityDropdown = false,
@@ -29,6 +24,7 @@ class LoftPage extends StatefulWidget {
     this.scrollController,
     this.appBarBottom,
     this.onPullToRefresh,
+    this.appBarHeight,
     super.key,
   })  : _showCityDropdown = showCityDropdown,
         _title = null,
@@ -43,6 +39,7 @@ class LoftPage extends StatefulWidget {
   final bool _showCityDropdown;
   final String? _title;
   final LoftAppBarType? _loftAppBarType;
+  final double? appBarHeight;
 
   @override
   State<LoftPage> createState() => _LoftPageState();
@@ -82,61 +79,28 @@ class _LoftPageState extends State<LoftPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget title() => widget._title != null && widget._title != ''
-        ? AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 200),
-            style: (listScrolled
-                    ? Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        )
-                    : Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        )) ??
-                const TextStyle(),
-            child: Text(
-              widget._title!,
-            ),
-          )
-        : LoftAppBarContent(
-            cityName: selectedCity?.name ?? 'São Paulo',
-            showDropdown: widget._showCityDropdown,
-            onDropdownTap: () {
-              SelectCityModal.show(context, selectedCity: selectedCity,
-                  onCitySelected: (city) {
-                setState(() => selectedCity = city);
-                Navigator.pop(context);
-              });
-            },
-          );
-
     Widget scaffold = KeyboardDismissOnTap(
       child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          centerTitle: false,
-          bottom: widget.appBarBottom,
-          elevation: listScrolled ||
-                  (widget.appBarBottom != null && widget.body != null)
-              ? 1.0
-              : 0.0,
           backgroundColor: Colors.white,
-          title: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: title(),
+          appBar: LoftAppBar(
+            title: widget._title,
+            loftAppBarType: widget._loftAppBarType,
+            bottom: widget.appBarBottom,
+            listScrolled: listScrolled,
+            showCityDropdown: widget._showCityDropdown,
+            appBarHeight: widget.appBarHeight,
+            selectedCity: selectedCity,
+            onCitySelected: (city) {
+              setState(() => selectedCity = city);
+            },
           ),
-          toolbarHeight:
-              widget._loftAppBarType == LoftAppBarType.withTitle && listScrolled
-                  ? kToolbarHeight - 16.0
-                  : null,
-        ),
-        body: widget.body ??
-            Center(
-              child: ListView(
-                controller: _scrollController,
-                children: widget.children ?? [],
-              ),
-            ),
-      ),
+          body: widget.body ??
+              Center(
+                child: ListView(
+                  controller: _scrollController,
+                  children: widget.children ?? [],
+                ),
+              )),
     );
 
     return widget.onPullToRefresh == null

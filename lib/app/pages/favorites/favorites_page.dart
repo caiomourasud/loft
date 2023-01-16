@@ -27,6 +27,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 size: 60.0,
               ),
               title: 'Você ainda não tem nenhum \nimóvel favorito.',
+              titleStyle: Theme.of(context).textTheme.titleMedium,
               subtitle:
                   'Para salvar um imóvel é só clicar no ícone de coração e ele irá aparecer aqui.',
               actionButton: LoftOutlinedButton(

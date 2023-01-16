@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:loft/app/components/loft-apartment-carousel/loft_apartment_carousel_item.dart';
+import 'package:loft/app/components/loft_app_bar.dart';
 import 'package:loft/app/models/apartment.dart';
-import 'package:loft/app/pages/loft_page.dart';
+import 'package:loft/app/models/city.dart';
 import 'package:loft/app/components/loft_chip.dart';
 import 'package:loft/app/pages/search/components/map_list_button.dart';
 
@@ -24,6 +25,10 @@ class _SearchPageState extends State<SearchPage> {
   LatLng target = const LatLng(45.521563, -122.677433);
   bool showList = true;
   bool isDraggableScrollSheetOpenned = false;
+  bool isDraggableScrollSheetOnMiddle = false;
+  String searchPlaceholder = 'Busque por bairro';
+
+  City? selectedCity = const City(id: 0, name: 'São Paulo');
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -76,6 +81,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
+    getSearchPlaceholder();
     _handleLocationPermission();
     _getCurrentPosition();
     draggableScrollableController = DraggableScrollableController();
@@ -91,6 +97,18 @@ class _SearchPageState extends State<SearchPage> {
           isDraggableScrollSheetOpenned = false;
         });
       }
+      if (draggableScrollableController.pixels >=
+          draggableScrollableController.sizeToPixels(0.5)) {
+        if (!isDraggableScrollSheetOnMiddle) {
+          setState(() {
+            isDraggableScrollSheetOnMiddle = true;
+          });
+        }
+      } else if (isDraggableScrollSheetOnMiddle) {
+        setState(() {
+          isDraggableScrollSheetOnMiddle = false;
+        });
+      }
     });
     super.initState();
   }
@@ -99,6 +117,23 @@ class _SearchPageState extends State<SearchPage> {
   void dispose() {
     draggableScrollableController.removeListener(() {});
     super.dispose();
+  }
+
+  Future<void> getSearchPlaceholder() async {
+    List<String> list = ['bairro', 'rua', 'avenida', 'condomínio'];
+    String searchString = 'Busque por';
+    int count = 0;
+    while (count >= 0) {
+      if (count == list.length - 1) {
+        count = 0;
+      } else {
+        count++;
+      }
+      await Future.delayed(const Duration(seconds: 4));
+      setState(() {
+        searchPlaceholder = '$searchString ${list[count]}';
+      });
+    }
   }
 
   @override
@@ -148,199 +183,429 @@ class _SearchPageState extends State<SearchPage> {
       ),
     ];
 
-    return LoftPage.noTitle(
-      appBarBottom: PreferredSize(
-        preferredSize: const Size.fromHeight((kToolbarHeight * 2) + 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: kToolbarHeight,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: CupertinoSearchTextField(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(kToolbarHeight),
-                    color: Colors.grey[100],
-                    border: Border.all(color: Colors.grey.shade400)),
-                prefixInsets:
-                    const EdgeInsetsDirectional.fromSTEB(20.0, 0, 8.0, 4),
-                placeholder:
-                    'Busque por avenida', // bairro, rua, avenida, condomínio
-              ),
-            ),
-            Container(
-              height: kToolbarHeight,
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                children: const [
-                  LoftChip(
-                    label: 'Filtrar',
-                    icon: CupertinoIcons.slider_horizontal_3,
+    return Scaffold(
+      body: Stack(
+        children: [
+          LayoutBuilder(builder: (context, constraints) {
+            return Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: [
+                GoogleMap(
+                  onMapCreated: _onMapCreated,
+                  myLocationEnabled: true,
+                  // myLocationButtonEnabled: false,
+                  initialCameraPosition: CameraPosition(
+                    target: target,
+                    zoom: 13.0,
                   ),
-                  LoftChip.outlined(label: 'Preço'),
-                  LoftChip.outlined(label: 'Cômodos'),
-                  LoftChip.outlined(label: 'Metragem'),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: LayoutBuilder(builder: (context, constraints) {
-        return Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            GoogleMap(
-              onMapCreated: _onMapCreated,
-              myLocationEnabled: true,
-              // myLocationButtonEnabled: false,
-              initialCameraPosition: CameraPosition(
-                target: target,
-                zoom: 13.0,
-              ),
-              markers: {
-                const Marker(
-                  markerId: MarkerId('1'),
-                  position: LatLng(45.520400, -122.647433),
+                  markers: {
+                    const Marker(
+                      markerId: MarkerId('1'),
+                      position: LatLng(45.520400, -122.647433),
+                    ),
+                    const Marker(
+                      markerId: MarkerId('2'),
+                      position: LatLng(45.521563, -122.677433),
+                    ),
+                  },
                 ),
-                const Marker(
-                  markerId: MarkerId('2'),
-                  position: LatLng(45.521563, -122.677433),
-                ),
-              },
-            ),
-            if (showList)
-              DraggableScrollableSheet(
-                controller: draggableScrollableController,
-                initialChildSize: 0.4,
-                minChildSize: 0.4,
-                builder: (context, controller) {
-                  return Stack(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    children: [
-                      if (isDraggableScrollSheetOpenned)
-                        Container(
-                          color: Colors.white,
-                          height: constraints.maxHeight / 1.35,
-                        ),
-                      ListView(
-                        controller: controller,
+                if (showList)
+                  DraggableScrollableSheet(
+                    controller: draggableScrollableController,
+                    initialChildSize: 0.4,
+                    minChildSize: 0.4,
+                    builder: (context, controller) {
+                      return Stack(
+                        alignment: AlignmentDirectional.bottomCenter,
                         children: [
-                          Container(
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(32.0),
-                                  topRight: Radius.circular(32.0)),
+                          if (isDraggableScrollSheetOpenned)
+                            Container(
                               color: Colors.white,
+                              height: constraints.maxHeight / 1.35,
                             ),
-                            // height: MediaQuery.of(context).size.height,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 4.0,
-                                    width: 32.0,
-                                    margin: const EdgeInsets.all(8.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(4.0),
-                                      ),
-                                      color: Colors.grey.shade300,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10.0),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                          ListView(
+                            controller: controller,
+                            children: [
+                              Container(
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(32.0),
+                                      topRight: Radius.circular(32.0)),
+                                  color: Colors.white,
+                                ),
+                                // height: MediaQuery.of(context).size.height,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Column(
                                     children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          RichText(
-                                            text: TextSpan(
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium,
-                                              children: [
-                                                TextSpan(
-                                                    text: '55.837',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium
-                                                        ?.copyWith(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        )),
-                                                const TextSpan(
-                                                    text: ' imóveis'),
-                                              ],
-                                            ),
+                                      Container(
+                                        height: 4.0,
+                                        width: 32.0,
+                                        margin: const EdgeInsets.all(8.0),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(4.0),
                                           ),
-                                          const SizedBox(height: 4.0),
-                                          Text('São Paulo, SP',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall)
+                                          color: Colors.grey.shade300,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10.0),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              RichText(
+                                                text: TextSpan(
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium,
+                                                  children: [
+                                                    TextSpan(
+                                                        text: '55.837',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium
+                                                            ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            )),
+                                                    const TextSpan(
+                                                        text: ' imóveis'),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4.0),
+                                              Text('São Paulo, SP',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall)
+                                            ],
+                                          ),
+                                          const LoftChip.outlined(
+                                              label: 'Ordenar')
                                         ],
                                       ),
-                                      const LoftChip.outlined(label: 'Ordenar')
+                                      Column(
+                                        children: apartments
+                                            .map(
+                                              (apartment) => Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 10.0,
+                                                ),
+                                                child:
+                                                    LoftApartmentCarouselItem(
+                                                  apartment: apartment,
+                                                ),
+                                              ),
+                                            )
+                                            .toList(),
+                                      ),
+                                      Column(
+                                        children: apartments
+                                            .map(
+                                              (apartment) => Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 10.0,
+                                                ),
+                                                child:
+                                                    LoftApartmentCarouselItem(
+                                                  apartment: apartment,
+                                                ),
+                                              ),
+                                            )
+                                            .toList(),
+                                      ),
+                                      const SizedBox(height: 60.0),
                                     ],
                                   ),
-                                  Column(
-                                    children: apartments
-                                        .map(
-                                          (apartment) => Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 10.0,
-                                            ),
-                                            child: LoftApartmentCarouselItem(
-                                              apartment: apartment,
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                  Column(
-                                    children: apartments
-                                        .map(
-                                          (apartment) => Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 10.0,
-                                            ),
-                                            child: LoftApartmentCarouselItem(
-                                              apartment: apartment,
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                  const SizedBox(height: 60.0),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
+                      );
+                    },
+                  ),
+                MapListButton(
+                    showList: showList,
+                    onTap: () {
+                      setState(() {
+                        showList = !showList;
+                        isDraggableScrollSheetOpenned = false;
+                      });
+                    }),
+              ],
+            );
+          }),
+          SizedBox(
+            height: isDraggableScrollSheetOnMiddle ||
+                    isDraggableScrollSheetOpenned
+                ? (kToolbarHeight * 2) + MediaQuery.of(context).viewPadding.top
+                : (kToolbarHeight * 3) + MediaQuery.of(context).viewPadding.top,
+            child: LoftAppBar(
+              appBarHeight: isDraggableScrollSheetOnMiddle ||
+                      isDraggableScrollSheetOpenned
+                  ? 0.0
+                  : null,
+              selectedCity: selectedCity,
+              onCitySelected: (city) {
+                setState(() {
+                  selectedCity = city;
+                });
+              },
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(kToolbarHeight * 2),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: kToolbarHeight,
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: CupertinoSearchTextField(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(kToolbarHeight),
+                            color: Colors.grey[100],
+                            border: Border.all(color: Colors.grey.shade400)),
+                        prefixInsets: const EdgeInsetsDirectional.fromSTEB(
+                            20.0, 0, 8.0, 4),
+                        placeholder: searchPlaceholder,
                       ),
-                    ],
-                  );
-                },
+                    ),
+                    Container(
+                      height: kToolbarHeight,
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        children: const [
+                          LoftChip(
+                            label: 'Filtrar',
+                            icon: CupertinoIcons.slider_horizontal_3,
+                          ),
+                          LoftChip.outlined(label: 'Preço'),
+                          LoftChip.outlined(label: 'Cômodos'),
+                          LoftChip.outlined(label: 'Metragem'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            MapListButton(
-                showList: showList,
-                onTap: () {
-                  setState(() {
-                    showList = !showList;
-                    isDraggableScrollSheetOpenned = false;
-                  });
-                }),
-          ],
-        );
-      }),
+            ),
+          ),
+          // LoftPage.noTitle(
+          //   appBarHeight:
+          //       isDraggableScrollSheetOnMiddle || isDraggableScrollSheetOpenned
+          //           ? 0.0
+          //           : null,
+          //   appBarBottom: PreferredSize(
+          //     preferredSize: const Size.fromHeight(kToolbarHeight * 2),
+          //     child: Column(
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Container(
+          //           height: kToolbarHeight,
+          //           padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          //           child: CupertinoSearchTextField(
+          //             decoration: BoxDecoration(
+          //                 borderRadius: BorderRadius.circular(kToolbarHeight),
+          //                 color: Colors.grey[100],
+          //                 border: Border.all(color: Colors.grey.shade400)),
+          //             prefixInsets:
+          //                 const EdgeInsetsDirectional.fromSTEB(20.0, 0, 8.0, 4),
+          //             placeholder: searchPlaceholder,
+          //           ),
+          //         ),
+          //         Container(
+          //           height: kToolbarHeight,
+          //           padding: const EdgeInsets.symmetric(vertical: 8.0),
+          //           child: ListView(
+          //             scrollDirection: Axis.horizontal,
+          //             padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          //             children: const [
+          //               LoftChip(
+          //                 label: 'Filtrar',
+          //                 icon: CupertinoIcons.slider_horizontal_3,
+          //               ),
+          //               LoftChip.outlined(label: 'Preço'),
+          //               LoftChip.outlined(label: 'Cômodos'),
+          //               LoftChip.outlined(label: 'Metragem'),
+          //             ],
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          //   body: LayoutBuilder(builder: (context, constraints) {
+          //     return Stack(
+          //       alignment: AlignmentDirectional.bottomCenter,
+          //       children: [
+          //         GoogleMap(
+          //           onMapCreated: _onMapCreated,
+          //           myLocationEnabled: true,
+          //           // myLocationButtonEnabled: false,
+          //           initialCameraPosition: CameraPosition(
+          //             target: target,
+          //             zoom: 13.0,
+          //           ),
+          //           markers: {
+          //             const Marker(
+          //               markerId: MarkerId('1'),
+          //               position: LatLng(45.520400, -122.647433),
+          //             ),
+          //             const Marker(
+          //               markerId: MarkerId('2'),
+          //               position: LatLng(45.521563, -122.677433),
+          //             ),
+          //           },
+          //         ),
+          //         if (showList)
+          //           DraggableScrollableSheet(
+          //             controller: draggableScrollableController,
+          //             initialChildSize: 0.4,
+          //             minChildSize: 0.4,
+          //             builder: (context, controller) {
+          //               return Stack(
+          //                 alignment: AlignmentDirectional.bottomCenter,
+          //                 children: [
+          //                   if (isDraggableScrollSheetOpenned)
+          //                     Container(
+          //                       color: Colors.white,
+          //                       height: constraints.maxHeight / 1.35,
+          //                     ),
+          //                   ListView(
+          //                     controller: controller,
+          //                     children: [
+          //                       Container(
+          //                         decoration: const BoxDecoration(
+          //                           borderRadius: BorderRadius.only(
+          //                               topLeft: Radius.circular(32.0),
+          //                               topRight: Radius.circular(32.0)),
+          //                           color: Colors.white,
+          //                         ),
+          //                         // height: MediaQuery.of(context).size.height,
+          //                         child: Padding(
+          //                           padding: const EdgeInsets.symmetric(
+          //                               horizontal: 20.0),
+          //                           child: Column(
+          //                             children: [
+          //                               Container(
+          //                                 height: 4.0,
+          //                                 width: 32.0,
+          //                                 margin: const EdgeInsets.all(8.0),
+          //                                 decoration: BoxDecoration(
+          //                                   borderRadius: const BorderRadius.all(
+          //                                     Radius.circular(4.0),
+          //                                   ),
+          //                                   color: Colors.grey.shade300,
+          //                                 ),
+          //                               ),
+          //                               const SizedBox(height: 10.0),
+          //                               Row(
+          //                                 mainAxisAlignment:
+          //                                     MainAxisAlignment.spaceBetween,
+          //                                 children: [
+          //                                   Column(
+          //                                     crossAxisAlignment:
+          //                                         CrossAxisAlignment.start,
+          //                                     children: [
+          //                                       RichText(
+          //                                         text: TextSpan(
+          //                                           style: Theme.of(context)
+          //                                               .textTheme
+          //                                               .bodyMedium,
+          //                                           children: [
+          //                                             TextSpan(
+          //                                                 text: '55.837',
+          //                                                 style: Theme.of(context)
+          //                                                     .textTheme
+          //                                                     .bodyMedium
+          //                                                     ?.copyWith(
+          //                                                       fontWeight:
+          //                                                           FontWeight
+          //                                                               .bold,
+          //                                                     )),
+          //                                             const TextSpan(
+          //                                                 text: ' imóveis'),
+          //                                           ],
+          //                                         ),
+          //                                       ),
+          //                                       const SizedBox(height: 4.0),
+          //                                       Text('São Paulo, SP',
+          //                                           style: Theme.of(context)
+          //                                               .textTheme
+          //                                               .bodySmall)
+          //                                     ],
+          //                                   ),
+          //                                   const LoftChip.outlined(
+          //                                       label: 'Ordenar')
+          //                                 ],
+          //                               ),
+          //                               Column(
+          //                                 children: apartments
+          //                                     .map(
+          //                                       (apartment) => Padding(
+          //                                         padding:
+          //                                             const EdgeInsets.symmetric(
+          //                                           vertical: 10.0,
+          //                                         ),
+          //                                         child:
+          //                                             LoftApartmentCarouselItem(
+          //                                           apartment: apartment,
+          //                                         ),
+          //                                       ),
+          //                                     )
+          //                                     .toList(),
+          //                               ),
+          //                               Column(
+          //                                 children: apartments
+          //                                     .map(
+          //                                       (apartment) => Padding(
+          //                                         padding:
+          //                                             const EdgeInsets.symmetric(
+          //                                           vertical: 10.0,
+          //                                         ),
+          //                                         child:
+          //                                             LoftApartmentCarouselItem(
+          //                                           apartment: apartment,
+          //                                         ),
+          //                                       ),
+          //                                     )
+          //                                     .toList(),
+          //                               ),
+          //                               const SizedBox(height: 60.0),
+          //                             ],
+          //                           ),
+          //                         ),
+          //                       ),
+          //                     ],
+          //                   ),
+          //                 ],
+          //               );
+          //             },
+          //           ),
+          //         MapListButton(
+          //             showList: showList,
+          //             onTap: () {
+          //               setState(() {
+          //                 showList = !showList;
+          //                 isDraggableScrollSheetOpenned = false;
+          //               });
+          //             }),
+          //       ],
+          //     );
+          //   }),
+          // ),
+        ],
+      ),
     );
   }
 }

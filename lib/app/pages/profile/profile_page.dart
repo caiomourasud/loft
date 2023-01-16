@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loft/app/components/loft_button.dart';
+import 'package:loft/app/components/loft_empty_page_component.dart';
 import 'package:loft/app/components/loft_profile_section.dart';
 import 'package:loft/app/pages/loft_page.dart';
 
@@ -12,26 +13,24 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   PreferredSizeWidget get bottom => PreferredSize(
-      preferredSize: const Size.fromHeight(152.0),
+      preferredSize: const Size.fromHeight(170.0),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 8.0),
-            Text(
-              'Olá!',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 4.0),
-            const Text('Entre ou se cadastre para salvar seus imóveis'
-                ' favoritos e agendar visitas.'),
-            const SizedBox(height: 16.0),
-            LoftButton(
-              label: 'Entrar',
-              onPressed: () {},
+            LoftEmptyPageComponent(
+              padding: EdgeInsets.zero,
+              textAlign: TextAlign.left,
+              isActionButtonExpanded: true,
+              title: 'Olá!',
+              subtitle: 'Entre ou se cadastre para salvar seus imóveis'
+                  ' favoritos e agendar visitas.',
+              actionButton: LoftButton(
+                label: 'Entrar',
+                onPressed: () {},
+              ),
             ),
             const SizedBox(height: 16.0),
           ],

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loft/app/components/loft-apartment-carousel/loft_apartment_carousel.dart';
 import 'package:loft/app/components/loft-card-carousel/loft_card_carousel.dart';
 import 'package:loft/app/components/loft_button.dart';
+import 'package:loft/app/components/loft_empty_page_component.dart';
 import 'package:loft/app/components/loft_outlined_button.dart';
 import 'package:loft/app/models/apartment.dart';
 import 'package:loft/app/models/carousel_card.dart';
@@ -114,44 +115,30 @@ class _HomePageState extends State<HomePage> {
         ),
         const SizedBox(height: 32.0),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.brown[50],
               borderRadius: const BorderRadius.all(Radius.circular(10.0)),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16.0),
-                  SvgPicture.asset(
-                    'assets/logos/loft_simple.svg',
-                    color: Colors.grey[900],
-                    height: 24.0,
-                  ),
-                  const SizedBox(height: 16.0),
-                  Text(
-                    'Venda seu imóvel rápido e sem burocracia',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.bold, fontSize: 24),
-                  ),
-                  const SizedBox(height: 8.0),
-                  Text(
+              padding: const EdgeInsets.all(20.0),
+              child: LoftEmptyPageComponent(
+                padding: EdgeInsets.zero,
+                textAlign: TextAlign.left,
+                icon: SvgPicture.asset(
+                  'assets/logos/loft_simple.svg',
+                  color: Colors.grey[900],
+                  height: 24.0,
+                ),
+                title: 'Venda seu imóvel rápido e sem burocracia',
+                subtitle:
                     'Anuncie grátis, com fotos profissionais e apoio de especialistas.',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 32.0),
-                  LoftOutlinedButton(
-                    label: 'Anunciar meu imóvel',
-                    loftButtonSize: LoftButtonSize.small,
-                    onPressed: () {},
-                  ),
-                  const SizedBox(height: 16.0),
-                ],
+                actionButton: LoftOutlinedButton(
+                  loftButtonSize: LoftButtonSize.small,
+                  label: 'Anunciar meu imóvel',
+                  onPressed: () {},
+                ),
               ),
             ),
           ),
@@ -187,31 +174,15 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               const SizedBox(height: 16.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 36.0),
-                child: Column(
-                  children: [
-                    Text(
-                      'Continue sua busca pelo lar ideal',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(fontWeight: FontWeight.bold, fontSize: 24),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8.0),
-                    Text(
-                      'Busque e filtre por rua, avenida, condomínio e agende sua visita.',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+              LoftEmptyPageComponent(
+                isActionButtonExpanded: true,
+                title: 'Continue sua busca pelo lar ideal',
+                subtitle:
+                    'Busque e filtre por rua, avenida, condomínio e agende sua visita.',
+                actionButton: LoftButton(
+                  label: 'Buscar imóveis',
+                  onPressed: () {},
                 ),
-              ),
-              const SizedBox(height: 32.0),
-              LoftButton(
-                label: 'Buscar imóveis',
-                onPressed: () {},
               ),
               const SizedBox(height: 16.0),
             ],
