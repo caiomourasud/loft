@@ -24,9 +24,9 @@ class _HomePageState extends State<HomePage> {
     Apartment(
       id: 1,
       pictures: [
-        'https://resizedimgs.zapimoveis.com.br/fit-in/800x360/named.images.sp/b09ad4651460a70ddd59cdaa04ea8f77/apartamento-com-4-quartos-para-alugar-108m-no-parque-amazonia-goiania.jpg',
-        'https://resizedimgs.zapimoveis.com.br/fit-in/800x360/named.images.sp/164946e92da5c8fcc235cc8c0b343d1c/apartamento-com-4-quartos-para-alugar-108m-no-parque-amazonia-goiania.jpg',
-        'https://resizedimgs.zapimoveis.com.br/fit-in/800x360/named.images.sp/bae10e2bd4a4a9ea9ffeb50b56f96cc1/apartamento-com-4-quartos-para-alugar-108m-no-parque-amazonia-goiania.jpg',
+        'assets/apartments/apartment1/1.jpg',
+        'assets/apartments/apartment1/2.jpg',
+        'assets/apartments/apartment1/3.jpg',
       ],
       type: 1,
       price: 145.000,
@@ -39,9 +39,9 @@ class _HomePageState extends State<HomePage> {
     Apartment(
       id: 2,
       pictures: [
-        'https://imgbr.imovelwebcdn.com/avisos/2/29/70/32/65/19/360x266/3502000390.jpg',
-        'https://imgbr.imovelwebcdn.com/avisos/2/29/70/32/65/19/360x266/3502000400.jpg',
-        'https://imgbr.imovelwebcdn.com/avisos/2/29/70/32/65/19/360x266/3502000381.jpg'
+        'assets/apartments/apartment2/1.jpg',
+        'assets/apartments/apartment2/2.jpg',
+        'assets/apartments/apartment2/3.jpg',
       ],
       type: 1,
       price: 415.000,
@@ -54,9 +54,9 @@ class _HomePageState extends State<HomePage> {
     Apartment(
       id: 3,
       pictures: [
-        'https://imgbr.imovelwebcdn.com/avisos/2/29/69/35/47/72/720x532/3455778032.jpg',
-        'https://imgbr.imovelwebcdn.com/avisos/2/29/69/35/47/72/720x532/3455778040.jpg',
-        'https://imgbr.imovelwebcdn.com/avisos/2/29/69/35/47/72/720x532/3455778074.jpg'
+        'assets/apartments/apartment3/1.jpg',
+        'assets/apartments/apartment3/2.jpg',
+        'assets/apartments/apartment3/3.jpg',
       ],
       type: 2,
       price: 331.858,

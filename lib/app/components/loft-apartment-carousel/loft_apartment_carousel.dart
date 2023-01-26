@@ -26,7 +26,7 @@ class _LoftApartmentCarouselState extends State<LoftApartmentCarousel> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 348,
+      height: 354,
       width: double.infinity,
       child: Column(
         mainAxisSize: MainAxisSize.min,
